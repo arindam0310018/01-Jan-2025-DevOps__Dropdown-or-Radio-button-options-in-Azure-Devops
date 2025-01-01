@@ -1,0 +1,49 @@
+trigger:
+  none
+
+##################
+# Drop Down Menu:-
+##################
+parameters:
+  - name: environment
+    displayName: Select environment
+    type: string
+    default: 'dev'
+    values:
+      - dev
+      - test
+      - uat
+      - prod
+
+#############
+#Variables:-
+############
+variables:
+  ServiceConnection: 'amcloud-cicd-service-connection' # Please replace with your Service Connection!
+  BuildAgent: 'windows-latest' # Please replace with your Build Agent. You can continue to use this as this is Microsoft Hosted Windows Build Agent!
+
+######################
+# Declare Build Agent:-
+######################
+pool:
+  vmImage: '$(BuildAgent)'
+
+##################################
+# Declare Stages:-
+# Test Runtime parameters as:-
+# 1. Dropdown Menu
+##################################
+stages:
+- stage: Test_Runtime_Parameters_DropDown_Menu
+  displayName: Test Runtime Parameters Dropdown Menu
+  jobs:
+  - job: Test_Runtime_Parameters_DropDown_Menu
+    steps:
+    - task: AzureCLI@2
+      displayName: Test Runtime Parameters Dropdown Menu
+      inputs:
+        azureSubscription: '$(ServiceConnection)'
+        scriptLocation: 'inlineScript'
+        scriptType: 'ps'
+        inlineScript: |
+          echo "Deploying to ${{ parameters.environment }} environment"
